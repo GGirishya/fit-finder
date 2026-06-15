@@ -12,6 +12,8 @@
 List every tool your agent will use. For each tool, fill in all four fields.
 You must have at least 3 tools. The three required tools are listed — add any additional tools below them.
 
+**These are the tools the agent will use: search_listings, suggest_outfit, create_fit_card**
+
 ### Tool 1: search_listings
 
 **What it does:**
