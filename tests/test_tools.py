@@ -2,7 +2,7 @@ from tools import search_listings, suggest_outfit, create_fit_card
 from utils.data_loader import get_example_wardrobe, get_empty_wardrobe
 
 
-# search_listings tests
+# search_listings testscd
 def test_search_returns_results():
     results = search_listings("vintage graphic tee", size=None, max_price=50)
     assert isinstance(results, list)
