@@ -110,31 +110,32 @@ Suggest 1-2 specific outfit combinations using the new item and pieces from thei
 # ── Tool 3: create_fit_card ───────────────────────────────────────────────────
 
 def create_fit_card(outfit: str, new_item: dict) -> str:
-    """
-    Generate a short, shareable outfit caption for the thrifted find.
+    if not outfit or not outfit.strip():
+        return "Error: outfit description is missing — cannot generate a fit card."
+    
+    client = _get_groq_client()
+    
+    prompt = f"""Write a 2-3 sentence Instagram caption for this thrifted outfit.
 
-    Args:
-        outfit:   The outfit suggestion string from suggest_outfit().
-        new_item: The listing dict for the thrifted item.
+Item details:
+- Title: {new_item.get('title')}
+- Price: ${new_item.get('price')}
+- Platform: {new_item.get('platform')}
 
-    Returns:
-        A 2–4 sentence string usable as an Instagram/TikTok caption.
-        If outfit is empty or missing, return a descriptive error message
-        string — do NOT raise an exception.
+Outfit description:
+{outfit}
 
-    The caption should:
-    - Feel casual and authentic (like a real OOTD post, not a product description)
-    - Mention the item name, price, and platform naturally (once each)
-    - Capture the outfit vibe in specific terms
-    - Sound different each time for different inputs (use higher LLM temperature)
+Rules:
+- Write in casual first-person (like a real person posting, not a brand)
+- Mention the item name, price, and platform once each, naturally
+- Capture the specific vibe of the outfit
+- No hashtags, No abnomal formatting.
+- Keep it under 3 sentences, you can add emojis if it fits the vibe!"""
 
-    TODO:
-        1. Guard against an empty or whitespace-only outfit string.
-        2. Build a prompt that gives the LLM the item details and the outfit,
-           and asks for a caption matching the style guidelines above.
-        3. Call the LLM and return the response.
-
-    Before writing code, fill in the Tool 3 section of planning.md.
-    """
-    # Replace this with your implementation
-    return ""
+    response = client.chat.completions.create(
+        model="llama-3.3-70b-versatile",
+        messages=[{"role": "user", "content": prompt}],
+        max_tokens=150,
+        temperature=1.2,
+    )
+    return response.choices[0].message.content
