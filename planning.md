@@ -143,6 +143,8 @@ For each tool, describe the specific failure mode you're handling and what the a
      sketch are all fine. You'll share this diagram with an AI tool when asking it to implement
      the planning loop and each individual tool. -->
 
+    here is the link to the diagram: https://mermaid.ai/d/0e12f995-7113-47cd-8d95-15bd0c80a289
+
 ---
 
 ## AI Tool Plan
@@ -157,6 +159,9 @@ For each tool, describe the specific failure mode you're handling and what the a
      "I'll give Claude my Tool 1 spec (inputs, return value, failure mode) and ask it to implement
      search_listings() using load_listings() from the data loader — then test it against 3 queries
      before trusting it" is a plan. -->
+
+
+     I plan to use both claude and gemini, I entend to give claude, the tool 1 spec above and the diagram of what i entend to implement. I will ask it to help me out then. I will take what it gives me into considerations and then see if there is any flows. i will verify it it actually generates the three parameters.
 
 **Milestone 3 — Individual tool implementations:**
 
