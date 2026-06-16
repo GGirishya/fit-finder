@@ -19,18 +19,21 @@ You must have at least 3 tools. The three required tools are listed — add any 
 **What it does:**
 <!-- Describe what this tool does in 1–2 sentences -->
 
+This tool will search the listings dataset and return items that match the user's description, size, and price constraints. It filters by keyword match against the all the parameters like style_tags and others only if provided.
+
 **Input parameters:**
 <!-- List each parameter, its type, and what it represents -->
-- `description` (str): ...
-- `size` (str): ...
-- `max_price` (float): ...
+- `description` (str): this is the normal description of the item 
+- `size` (str): this is cloth size by filter with forexample, M for medium, L for large, but if no size given then no filters
+- `max_price` (float): This is the maximum price in us $, any listing that would be above that would not be shown to the user.
 
 **What it returns:**
 <!-- Describe the return value — what fields does a result contain? -->
+A list of dicts, each being a listing from listings.json with fields: id, title, description, category, style_tags, size, condition, price, colors, brand, platform. Returns an empty list [] if nothing matches, never raises an exception.
 
 **What happens if it fails or returns nothing:**
 <!-- What should the agent do if no listings match? -->
-
+The agent sets session["error"] to a message like: "No listings matched your search. Try broadening your description, removing the size filter, or raising your max price." It returns early suggest_outfit and create_fit_card are never called.
 ---
 
 ### Tool 2: suggest_outfit
