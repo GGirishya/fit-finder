@@ -126,9 +126,9 @@ For each tool, describe the specific failure mode you're handling and what the a
 
 | Tool | Failure mode | Agent response |
 |------|-------------|----------------|
-| search_listings | No results match the query | |
-| suggest_outfit | Wardrobe is empty | |
-| create_fit_card | Outfit input is missing or incomplete | |
+| search_listings | No results match the query |  Sets session["error"] = "No listings found. Try a broader description, a different size, or a higher max price." outfit and fit card are never called.|
+| suggest_outfit | Wardrobe is empty | Calls LLM with a modified prompt asking for general styling advice. Returns a string starting with "No wardrobe on file — here's how to style this piece generally:"|
+| create_fit_card | Outfit input is missing or incomplete | Returns "Error: outfit description is missing — cannot generate a fit card." without calling the LLM.|
 
 ---
 
