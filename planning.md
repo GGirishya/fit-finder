@@ -61,17 +61,20 @@ If wardrobe["items"] is empty, the LLM is still called but prompted for general 
 
 **What it does:**
 <!-- Describe what this tool does in 1–2 sentences -->
+Takes the outfit suggestion and the new item and generates a short, casual, shareable caption the kind of thing someone would post on Instagram. Should feel personal and vary across calls.
 
 **Input parameters:**
 <!-- List each parameter, its type, and what it represents -->
-- `outfit` (...): ...
+- `outfit` (str): The outfit suggestion string that was returned from suggest_outfit
+- `new_item`(dict): The listing dict, used to pull in specific details like platform, price, and title for authenticity
 
 **What it returns:**
 <!-- Describe the return value -->
+A single string of 1–3 sentences in casual first-person voice, e.g. "thrifted this faded band tee off depop for $22 and honestly it was made for my wide-legs 🖤 full look in my stories". Returns a descriptive error string if outfit is empty.
 
 **What happens if it fails or returns nothing:**
 <!-- What should the agent do if the outfit data is incomplete? -->
-
+If outfit is an empty string, return "Error: outfit description is missing — cannot generate a fit card." Do not call the LLM with empty input.
 ---
 
 ### Additional Tools (if any)
@@ -85,6 +88,26 @@ If wardrobe["items"] is empty, the LLM is still called but prompted for general 
 **How does your agent decide which tool to call next?**
 <!-- Describe the logic your planning loop uses. What does it look at? What conditions change its behavior? How does it know when it's done? -->
 
+Search listings first. If nothing matches, save an error message and stop. Otherwise, save the top result and pass it to suggest_outfit. If that fails, stop with an error. If it succeeds, pass the suggestion and item to create_fit_card, save the result, and return the session.
+
+1. Call search_listings(description, size, max_price)
+2. If results == []:
+       Set session["error"] = "No listings found. Try..."
+       Return session early — do NOT proceed
+   Else:
+       Set session["selected_item"] = results[0]
+
+3. Call suggest_outfit(session["selected_item"], wardrobe)
+4. If suggest_outfit returns an error string:
+       Set session["error"] = that string
+       Return session early
+   Else:
+       Set session["outfit_suggestion"] = result
+
+5. Call create_fit_card(session["outfit_suggestion"], session["selected_item"])
+6. Set session["fit_card"] = result
+
+7. Return session
 ---
 
 ## State Management
