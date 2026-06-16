@@ -177,12 +177,16 @@ Write out what a full user interaction looks like from start to finish — tool 
 
 **Step 1:**
 <!-- What does the agent do first? Which tool is called? With what input? -->
+search_listings("vintage graphic tee", size=None, max_price=30.0) — returns a list of matching listings. Agent sets session["selected_item"] = results[0], e.g. {"title": "Faded Band Tee", "price": 22, "platform": "Depop", "condition": "Good", ...}
 
 **Step 2:**
 <!-- What happens next? What was returned from step 1? What tool is called now? -->
+suggest_outfit(session["selected_item"], wardrobe) — LLM receives the band tee details + wardrobe items (baggy jeans, chunky sneakers). Returns: "Pair this faded band tee with your wide-leg jeans and chunky sneakers for a 90s grunge look. Roll the sleeves once and tuck the front corner slightly for shape." Stored in session["outfit_suggestion"].
 
 **Step 3:**
 <!-- Continue until the full interaction is complete -->
+create_fit_card(session["outfit_suggestion"], session["selected_item"]) — LLM generates a caption using the outfit suggestion + tee details (platform, price). Returns: "thrifted this faded band tee off depop for $22 and honestly it was made for my wide-legs 🖤 full look in my stories" Stored in session["fit_card"].
 
 **Final output to user:**
 <!-- What does the user actually see at the end? -->
+The UI displays all three panels — the matched listing, the outfit suggestion, and the fit card caption.
