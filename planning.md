@@ -115,6 +115,9 @@ Search listings first. If nothing matches, save an error message and stop. Other
 **How does information from one tool get passed to the next?**
 <!-- Describe how your agent stores and accesses state within a session. What data is tracked? How is it passed between tool calls? -->
 
+A single session dict is created at the start of run_agent() and passed through each step.
+
+Each tool writes its output into the session before the next tool is called. suggest_outfit reads session["selected_item"]; create_fit_card reads both session["outfit_suggestion"] and session["selected_item"]. No tool re-prompts the user or uses hardcoded values.
 ---
 
 ## Error Handling
