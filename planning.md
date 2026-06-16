@@ -40,17 +40,20 @@ The agent sets session["error"] to a message like: "No listings matched your sea
 
 **What it does:**
 <!-- Describe what this tool does in 1–2 sentences -->
+Takes the selected listing and the user's wardrobe and calls the LLM to suggest one or more complete outfit combinations. Returns styling advice grounded in what the user actually owns.
 
 **Input parameters:**
 <!-- List each parameter, its type, and what it represents -->
-- `new_item` (dict): ...
-- `wardrobe` (dict): ...
+- `new_item` (dict): this is a single listing dict, the top result from search_listings, with fields like title, colors, style_tags, category.
+- `wardrobe` (dict): The user's wardrobe following wardrobe_schema.json — contains an items list of owned pieces with fields like type, color, style
 
 **What it returns:**
 <!-- Describe the return value -->
+It will return a populated string, containing one or more outfit suggestions.Returns an error string (not an exception) if the LLM call fails.
 
 **What happens if it fails or returns nothing:**
 <!-- What should the agent do if the wardrobe is empty or no outfit can be suggested? -->
+If wardrobe["items"] is empty, the LLM is still called but prompted for general styling advice instead: "No wardrobe items provided — here's how this piece is commonly styled: ..." The agent never crashes on an empty wardrobe.
 
 ---
 
