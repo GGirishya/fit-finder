@@ -144,6 +144,24 @@ For each tool, describe the specific failure mode you're handling and what the a
      the planning loop and each individual tool. -->
 
     here is the link to the diagram: https://mermaid.ai/d/0e12f995-7113-47cd-8d95-15bd0c80a289
+    ```mermaid
+flowchart TD
+    A[User query] --> B[run_agent - Planning Loop]
+    B --> C[search_listings description, size, max_price]
+    C --> D{results empty?}
+    D -- Yes --> E[session error = No listings found]
+    E --> F[RETURN session early]
+    D -- No --> G[session selected_item = results 0]
+    G --> H[suggest_outfit selected_item, wardrobe]
+    H --> I{wardrobe empty?}
+    I -- Yes --> J[LLM general styling advice]
+    I -- No --> K[LLM wardrobe-specific outfits]
+    J --> L[session outfit_suggestion = result]
+    K --> L
+    L --> M[create_fit_card outfit_suggestion, selected_item]
+    M --> N[session fit_card = result]
+    N --> O[RETURN session]
+```
 
 ---
 
@@ -165,8 +183,17 @@ For each tool, describe the specific failure mode you're handling and what the a
 
 **Milestone 3 — Individual tool implementations:**
 
+For search_listings, I gave Claude the Tool 1 spec from this file (inputs, return value, failure mode) and asked it to implement the function using load_listings() from utils/data_loader.py. I verified the generated code filtered by all three parameters, handled None size and price gracefully, and returned [] on no match. I tested it with three queries before trusting it.
+
+For suggest_outfit, I gave Claude the Tool 2 spec and the wardrobe schema and asked it to implement the function. I verified it handled the empty wardrobe case with a modified prompt rather than crashing. I tested it with both get_example_wardrobe() and get_empty_wardrobe().
+
+For create_fit_card, I gave Claude the Tool 3 spec and asked it to implement the function. I verified the empty outfit guard was present and ran it three times on the same input to confirm outputs varied.
+
 **Milestone 4 — Planning loop and state management:**
 
+I gave Claude the Architecture diagram above and the Planning Loop and State Management sections from this file and asked it help me to implement run_agent() in agent.py. Before running the generated  code I verified it branched on
+results == [], stored values in the session dict rather thannlocal variables,
+and did not call all three tools unconditionally. I tested the no-results branch explicitly with python agent.py.
 ---
 
 ## A Complete Interaction (Step by Step)
