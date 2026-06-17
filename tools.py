@@ -86,7 +86,7 @@ def suggest_outfit(new_item: dict, wardrobe: dict) -> str:
 They haven't shared their wardrobe. Give 1-2 suggestions for how this piece is commonly styled — what kinds of items pair well with it, what vibe it suits, and how to wear it."""
     else:
         wardrobe_text = "\n".join(
-            f"- {item.get('type', 'item')}: {item.get('color', '')} {item.get('style', '')}"
+            f"- {item.get('name')} (colors: {', '.join(item.get('colors', []))}; tags: {', '.join(item.get('style_tags', []))})"
             for item in wardrobe_items
         )
         prompt = f"""A user is considering buying this secondhand item:
